@@ -1,8 +1,8 @@
 VERSION = 4
 PATCHLEVEL = 9
 SUBLEVEL = 78
-EXTRAVERSION =
-NAME = Roaring Lionus
+EXTRAVERSION = +dolores1
+NAME = Dolores Abernathy
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"

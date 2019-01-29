@@ -299,7 +299,7 @@ libs-y				:= arch/arm/lib/ $(libs-y)
 ifeq ($(CONFIG_XIP_KERNEL),y)
 KBUILD_IMAGE := xipImage
 else
-KBUILD_IMAGE := zImage
+KBUILD_IMAGE := uImage
 endif
 
 # Build the DT binary blobs if we have OF configured
