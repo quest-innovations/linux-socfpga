@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "skeleton.dtsi"
 #include <dt-bindings/reset/altr,rst-mgr.h>
+#include <dt-bindings/interrupt-controller/irq.h>
 
 / {
 	#address-cells = <1>;
@@ -38,18 +38,27 @@
 		#size-cells = <0>;
 		enable-method = "altr,socfpga-smp";
 
-		cpu@0 {
+		cpu0: cpu@0 {
 			compatible = "arm,cortex-a9";
 			device_type = "cpu";
 			reg = <0>;
 			next-level-cache = <&L2>;
 		};
-		cpu@1 {
+		cpu1: cpu@1 {
 			compatible = "arm,cortex-a9";
 			device_type = "cpu";
 			reg = <1>;
 			next-level-cache = <&L2>;
 		};
+	};
+
+	pmu: pmu@ff111000 {
+		compatible = "arm,cortex-a9-pmu";
+		interrupt-parent = <&intc>;
+		interrupts = <0 176 4>, <0 177 4>;
+		interrupt-affinity = <&cpu0>, <&cpu1>;
+		reg = <0xff111000 0x1000>,
+		      <0xff113000 0x1000>;
 	};
 
 	intc: intc@fffed000 {
@@ -93,7 +102,7 @@
 			};
 		};
 
-		base_fpga_region: base-fpga-region {
+		base_fpga_region {
 			compatible = "fpga-region";
 			fpga-mgr = <&fpgamgr0>;
 
@@ -145,7 +154,7 @@
 						compatible = "fixed-clock";
 					};
 
-					main_pll: main_pll {
+					main_pll: main_pll@40 {
 						#address-cells = <1>;
 						#size-cells = <0>;
 						#clock-cells = <0>;
@@ -153,7 +162,7 @@
 						clocks = <&osc1>;
 						reg = <0x40>;
 
-						mpuclk: mpuclk {
+						mpuclk: mpuclk@48 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&main_pll>;
@@ -161,7 +170,7 @@
 							reg = <0x48>;
 						};
 
-						mainclk: mainclk {
+						mainclk: mainclk@4c {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&main_pll>;
@@ -169,7 +178,7 @@
 							reg = <0x4C>;
 						};
 
-						dbg_base_clk: dbg_base_clk {
+						dbg_base_clk: dbg_base_clk@50 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&main_pll>, <&osc1>;
@@ -177,21 +186,21 @@
 							reg = <0x50>;
 						};
 
-						main_qspi_clk: main_qspi_clk {
+						main_qspi_clk: main_qspi_clk@54 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&main_pll>;
 							reg = <0x54>;
 						};
 
-						main_nand_sdmmc_clk: main_nand_sdmmc_clk {
+						main_nand_sdmmc_clk: main_nand_sdmmc_clk@58 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&main_pll>;
 							reg = <0x58>;
 						};
 
-						cfg_h2f_usr0_clk: cfg_h2f_usr0_clk {
+						cfg_h2f_usr0_clk: cfg_h2f_usr0_clk@5c {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&main_pll>;
@@ -199,7 +208,7 @@
 						};
 					};
 
-					periph_pll: periph_pll {
+					periph_pll: periph_pll@80 {
 						#address-cells = <1>;
 						#size-cells = <0>;
 						#clock-cells = <0>;
@@ -207,42 +216,42 @@
 						clocks = <&osc1>, <&osc2>, <&f2s_periph_ref_clk>;
 						reg = <0x80>;
 
-						emac0_clk: emac0_clk {
+						emac0_clk: emac0_clk@88 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&periph_pll>;
 							reg = <0x88>;
 						};
 
-						emac1_clk: emac1_clk {
+						emac1_clk: emac1_clk@8c {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&periph_pll>;
 							reg = <0x8C>;
 						};
 
-						per_qspi_clk: per_qsi_clk {
+						per_qspi_clk: per_qsi_clk@90 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&periph_pll>;
 							reg = <0x90>;
 						};
 
-						per_nand_mmc_clk: per_nand_mmc_clk {
+						per_nand_mmc_clk: per_nand_mmc_clk@94 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&periph_pll>;
 							reg = <0x94>;
 						};
 
-						per_base_clk: per_base_clk {
+						per_base_clk: per_base_clk@98 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&periph_pll>;
 							reg = <0x98>;
 						};
 
-						h2f_usr1_clk: h2f_usr1_clk {
+						h2f_usr1_clk: h2f_usr1_clk@9c {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&periph_pll>;
@@ -250,7 +259,7 @@
 						};
 					};
 
-					sdram_pll: sdram_pll {
+					sdram_pll: sdram_pll@c0 {
 						#address-cells = <1>;
 						#size-cells = <0>;
 						#clock-cells = <0>;
@@ -258,28 +267,28 @@
 						clocks = <&osc1>, <&osc2>, <&f2s_sdram_ref_clk>;
 						reg = <0xC0>;
 
-						ddr_dqs_clk: ddr_dqs_clk {
+						ddr_dqs_clk: ddr_dqs_clk@c8 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&sdram_pll>;
 							reg = <0xC8>;
 						};
 
-						ddr_2x_dqs_clk: ddr_2x_dqs_clk {
+						ddr_2x_dqs_clk: ddr_2x_dqs_clk@cc {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&sdram_pll>;
 							reg = <0xCC>;
 						};
 
-						ddr_dq_clk: ddr_dq_clk {
+						ddr_dq_clk: ddr_dq_clk@d0 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&sdram_pll>;
 							reg = <0xD0>;
 						};
 
-						h2f_usr2_clk: h2f_usr2_clk {
+						h2f_usr2_clk: h2f_usr2_clk@d4 {
 							#clock-cells = <0>;
 							compatible = "altr,socfpga-perip-clk";
 							clocks = <&sdram_pll>;
@@ -528,11 +537,13 @@
 			clocks = <&l4_main_clk>;
 		};
 
-		fpga_bridge1: fpga_bridge@ff500000 {
+		fpga_bridge1: fpga_bridge@0xc0000000 {
 			compatible = "altr,socfpga-hps2fpga-bridge";
-			reg = <0xff500000 0x10000>;
+			reg = <0xc0000000 0x10000>;
 			resets = <&rst HPS2FPGA_RESET>;
 			clocks = <&l4_main_clk>;
+			#address-cells = <2>;
+			#size-cells = <1>;
 		};
 
 		fpgamgr0: fpgamgr@ff706000 {
@@ -549,7 +560,7 @@
 			interrupts = <0 115 4>;
 			interrupt-names = "macirq";
 			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-			clocks = <&emac0_clk>;
+			clocks = <&emac_0_clk>;
 			clock-names = "stmmaceth";
 			resets = <&rst EMAC0_RESET>;
 			reset-names = "stmmaceth";
@@ -567,7 +578,7 @@
 			interrupts = <0 120 4>;
 			interrupt-names = "macirq";
 			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-			clocks = <&emac1_clk>;
+			clocks = <&emac_1_clk>;
 			clock-names = "stmmaceth";
 			resets = <&rst EMAC1_RESET>;
 			reset-names = "stmmaceth";
@@ -678,7 +689,7 @@
 			status = "disabled";
 		};
 
-		eccmgr: eccmgr@ffd08140 {
+		eccmgr: eccmgr {
 			compatible = "altr,socfpga-ecc-manager";
 			#address-cells = <1>;
 			#size-cells = <1>;
@@ -709,6 +720,11 @@
 			prefetch-data = <1>;
 			prefetch-instr = <1>;
 			arm,shared-override;
+			arm,double-linefill = <1>;
+			arm,double-linefill-incr = <0>;
+			arm,double-linefill-wrap = <1>;
+			arm,prefetch-drop = <0>;
+			arm,prefetch-offset = <7>;
 		};
 
 		l3regs@0xff800000 {
@@ -738,7 +754,6 @@
 			interrupts = <0x0 0x90 0x4>;
 			dma-mask = <0xffffffff>;
 			clocks = <&nand_clk>;
-			have-hw-ecc-fixup;
 			status = "disabled";
 		};
 
@@ -857,7 +872,8 @@
 			interrupts = <0 162 4>;
 			reg-shift = <2>;
 			reg-io-width = <4>;
-			clocks = <&l4_sp_clk>;
+			//clocks = <&l4_sp_clk>;
+			clock-frequency = <100000000>;
 			dmas = <&pdma 28>,
 			       <&pdma 29>;
 			dma-names = "tx", "rx";
@@ -875,7 +891,7 @@
 			dma-names = "tx", "rx";
 		};
 
-		usbphy0: usbphy@0 {
+		usbphy0: usbphy {
 			#phy-cells = <0>;
 			compatible = "usb-nop-xceiv";
 			status = "okay";

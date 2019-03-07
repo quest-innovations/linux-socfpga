@@ -126,10 +126,6 @@
 			compatible = "altr,a10sr-reset";
 			#reset-cells = <1>;
 		};
-
-		ps_alarm {
-			compatible = "altr,a10sr-hwmon";
-		};
 	};
 };
 
@@ -144,14 +140,6 @@
 	i2c-sda-falling-time-ns = <6000>;
 	i2c-scl-falling-time-ns = <6000>;
 
-	lcd: lcd@28 {
-		compatible = "newhaven,nhd-0216k3z-nsw-bbw";
-		reg = <0x28>;
-		height = <2>;
-		width = <16>;
-		brightness = <8>;
-	};
-
 	eeprom@51 {
 		compatible = "atmel,24c32";
 		reg = <0x51>;
@@ -161,11 +149,6 @@
 	rtc@68 {
 		compatible = "dallas,ds1339";
 		reg = <0x68>;
-	};
-
-	max@4c {
-		compatible = "max1619";
-		reg = <0x4c>;
 	};
 
 	ltc@5c {
